@@ -18,7 +18,12 @@ const stateDefault = {
 export const baiTapQuanLyNguoiDungReducer = (state = stateDefault, action) => {
     switch (action.type){
 
-        default: return state
+        case 'THEM_NGUOI_DUNG':{
+            state.mangNguoiDung = [...state.mangNguoiDung,action.nguoiDung]
+            return {...state};
+        }
+
+        default: return state;
     }
 }
 
