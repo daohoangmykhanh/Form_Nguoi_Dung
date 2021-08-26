@@ -26,7 +26,7 @@ class FormDangKy extends Component {
     handleChangeInput = (event) => {
         let {value,name} = event.target;
 
-        let newValues = {...this.state.values};
+        let newValues = {...this.props.nguoiDung.values};
         newValues[name] = value;
 
         let attrValue = '';
@@ -37,7 +37,7 @@ class FormDangKy extends Component {
         }
 
 
-        let newErrors = {...this.state.errors};
+        let newErrors = {...this.props.nguoiDung.errors};
         let messageError = '';
         if(value.trim() === ''){
             messageError = name + ' không được bỏ trống!';
@@ -52,11 +52,14 @@ class FormDangKy extends Component {
         }
         newErrors[name] = messageError;
         
-        this.setState({
-            values:newValues,
-            errors:newErrors
-        })
      
+        this.props.dispatch({
+            type: 'HANDLE_CHANGE_INPUT',
+            nguoiDung: {
+                values: newValues,
+                errors: newErrors
+            }
+        })
     }
 
 
@@ -90,10 +93,12 @@ class FormDangKy extends Component {
             type: 'THEM_NGUOI_DUNG',
             nguoiDung: this.state.values
         }
-        this.pros.dispatch(action)
+        this.props.dispatch(action)
     }
 
     render() {
+
+        let {taiKhoan,hoTen,matKhau,email,maLoaiNguoiDung,soDienThoai} = this.props.nguoiDung.values
         return (
             <form className="card mt-5" onSubmit={this.handleSubmit}>
                 <div className="card-header bg-dark text-white">
@@ -104,34 +109,34 @@ class FormDangKy extends Component {
                         <div className="col-6">
                             <div className="form-group">
                                 <p> Tài khoản</p>
-                                <input className="form-control" name="taiKhoan" onChange={this.handleChangeInput}/>
+                                <input value={taiKhoan} className="form-control" name="taiKhoan" onChange={this.handleChangeInput}/>
                                 <p className="text-danger">{this.state.errors.taiKhoan}</p>
                             </div>
                             <div className="form-group">
                                 <p> Mật khẩu</p>
-                                <input className="form-control" name="matKhau" type="password" onChange={this.handleChangeInput}/>
+                                <input value={matKhau} className="form-control" name="matKhau" type="password" onChange={this.handleChangeInput}/>
                                 <p className="text-danger">{this.state.errors.matKhau}</p>
                             </div>
                             <div className="form-group">
                                 <p> Email</p>
-                                <input typeEmail="email" className="form-control" name="email" onChange={this.handleChangeInput}/>
+                                <input value={email} typeEmail="email" className="form-control" name="email" onChange={this.handleChangeInput}/>
                                 <p className="text-danger">{this.state.errors.email}</p>
                             </div>
                         </div>
                         <div className="col-6">
                             <div className="form-group">
                                 <p> Họ tên</p>
-                                <input className="form-control" name="hoTen" onChange={this.handleChangeInput}/>
+                                <input value={hoTen} className="form-control" name="hoTen" onChange={this.handleChangeInput}/>
                                 <p className="text-danger">{this.state.errors.hoTen}</p>
                             </div>
                             <div className="form-group">
                                 <p>Số điện thoại</p>
-                                <input className="form-control" name="soDienThoai" type="soDienThoai" onChange={this.handleChangeInput}/>
+                                <input value={soDienThoai} className="form-control" name="soDienThoai" type="soDienThoai" onChange={this.handleChangeInput}/>
                                 <p className="text-danger">{this.state.errors.soDienThoai}</p>
                             </div>
                             <div className="form-group">
                                 <p> Mã người dùng</p>
-                                <select className="form-control" name="maLoaiNguoiDung" onChange={this.handleChangeInput}>
+                                <select value={maLoaiNguoiDung}  className="form-control" name="maLoaiNguoiDung" onChange={this.handleChangeInput}>
                                     <option value="KhanhHang">Khách hàng</option>
                                     <option value="QuanTri">Quản trị</option>
                                 </select>
@@ -141,11 +146,24 @@ class FormDangKy extends Component {
                 </div>
                 <div className="card-footer text-left"> 
                     <button className="btn btn-outline-success mr-3" type="submit">Đăng ký</button>
-                    <button className="btn btn-outline-primary" type="button">Cập nhật</button>
+                    <button className="btn btn-outline-primary" type="button" onClick={()=> {
+                        const action = {
+                            type: 'CAP_NHAT_NGUOI_DUNG',
+                            nguoiDungCapNhat: this.props.nguoiDung.values
+                        }
+                        this.props.dispatch(action)
+                    }}>Cập nhật</button>
                 </div>
             </form>
         )
     }
 }
 
-export default connect ()(FormDangKy);
+const mapStateToProps = (state) => {
+    return{
+        sinhVienChinhSua: state.baiTapQuanLyNguoiDungReducer.nguoiDungChinhSua,
+        nguoiDung: state.baiTapQuanLyNguoiDungReducer.nguoiDung
+    }
+}
+
+export default connect (mapStateToProps)(FormDangKy);

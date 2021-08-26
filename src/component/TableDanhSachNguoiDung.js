@@ -31,10 +31,22 @@ class TableDanhSachNguoiDung extends Component {
                                     <td> {nguoiDung.matKhau}</td>
                                     <td> {nguoiDung.email}</td>
                                     <td> {nguoiDung.soDienThoai}</td>
-                                    <td> {nguoiDung.loaiNguoiDung}</td>
+                                    <td> {nguoiDung.maLoaiNguoiDung}</td>
                                     <td> 
-                                        <button className="btn btn-outline-danger mr-3">Xóa</button>
-                                        <button className="btn btn-outline-primary">Chỉnh sửa</button>
+                                        <button className="btn btn-outline-danger mr-3" onClick={()=>{
+                                            const action = {
+                                                type: 'XOA_NGUOI_DUNG',
+                                                taiKhoan:nguoiDung.taiKhoan
+                                            }
+                                            this.props.dispatch(action)
+                                        }}>Xóa</button>
+                                        <button className="btn btn-outline-primary" onClick={()=> {
+                                            const action = {
+                                                type: 'CHINH_SUA',
+                                                nguoiDungChinhSua: nguoiDung
+                                            }
+                                            this.props.dispatch(action)
+                                        }}>Chỉnh sửa</button>
                                     </td>
                                 </tr>
                             })
